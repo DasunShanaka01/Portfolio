@@ -21,7 +21,7 @@ const About = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/professional-summary')
+    fetch('/api/professional-summary')
       .then(res => res.json())
       .then(data => {
         if (data && data.data && data.data.length > 0) {

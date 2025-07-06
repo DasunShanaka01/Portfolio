@@ -33,7 +33,7 @@ const Education = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/education')
+    fetch('/api/education')
       .then(res => res.json())
       .then(data => {
         setEducationData(data.data || []);

@@ -35,8 +35,8 @@ const Skills = () => {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetch('http://localhost:5000/api/technical-skills').then(res => res.json()),
-      fetch('http://localhost:5000/api/soft-skills').then(res => res.json())
+      fetch('/api/technical-skills').then(res => res.json()),
+      fetch('/api/soft-skills').then(res => res.json())
     ])
       .then(([techData, softData]) => {
         setTechnicalSkills(techData.data || []);
