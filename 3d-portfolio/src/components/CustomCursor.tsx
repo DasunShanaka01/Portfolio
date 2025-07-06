@@ -5,6 +5,7 @@ const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [trails, setTrails] = useState<Array<{ x: number; y: number; id: number }>>([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const updateCursor = useCallback((e: MouseEvent) => {
     setPosition({ x: e.clientX, y: e.clientY });
@@ -33,6 +34,17 @@ const CustomCursor = () => {
 
   const handleMouseLeave = useCallback(() => setIsHovering(false), []);
 
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     let rafId: number;
     
@@ -59,6 +71,9 @@ const CustomCursor = () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [updateCursor, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseLeave]);
+
+  // Don't render cursor on mobile
+  if (isMobile) return null;
 
   return (
     <>

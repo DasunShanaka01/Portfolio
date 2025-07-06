@@ -45,7 +45,7 @@ function App() {
         <Navigation />
         <div className="canvas-container">
           <Canvas
-            camera={{ position: [0, 0, 5], fov: 75 }}
+            camera={{ position: [0, 0, 8], fov: 60 }}
             style={{ 
               background: `radial-gradient(ellipse at ${50 + mousePosition.x * 10}% ${50 + mousePosition.y * 10}%, #1a1a2e 0%, #16213e 50%, #0a0a0a 100%)`,
               position: 'fixed',

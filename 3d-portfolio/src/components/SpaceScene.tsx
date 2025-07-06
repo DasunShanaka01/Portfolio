@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, Float, OrbitControls } from '@react-three/drei';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Simple geometric shapes for space objects
@@ -21,10 +21,10 @@ const Planet = ({ position, color, size, rotationSpeed }: any) => {
           <sphereGeometry args={[size, 24, 24]} />
           <meshStandardMaterial 
             color={color}
-            roughness={0.8}
-            metalness={0.2}
+            roughness={0.6}
+            metalness={0.3}
             emissive={color}
-            emissiveIntensity={0.05}
+            emissiveIntensity={0.2}
           />
         </mesh>
         
@@ -146,70 +146,154 @@ const Astronaut = ({ position }: any) => {
 const SpaceScene = () => {
   return (
     <>
-      {/* Enhanced Lighting */}
-      <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
-      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#667eea" />
-      <pointLight position={[0, 20, 0]} intensity={0.5} color="#ff6b6b" />
-      <pointLight position={[0, -20, 0]} intensity={0.3} color="#4ecdc4" />
+      {/* Enhanced Lighting - Brighter for visibility */}
+      <ambientLight intensity={0.3} />
+      <pointLight position={[5, 5, 5]} intensity={1.5} color="#ffffff" />
+      <pointLight position={[-5, -5, -5]} intensity={1.0} color="#667eea" />
+      <pointLight position={[0, 10, 0]} intensity={0.6} color="#ff6b6b" />
+      <pointLight position={[0, -10, 0]} intensity={0.4} color="#4ecdc4" />
       
-      {/* Nebula Effect */}
-      <mesh position={[0, 0, -20]}>
-        <planeGeometry args={[50, 50]} />
+      {/* Multiple Nebula Layers for Depth */}
+      <mesh position={[0, 0, -30]}>
+        <planeGeometry args={[80, 80]} />
         <meshBasicMaterial 
           color="#667eea" 
+          transparent 
+          opacity={0.15}
+          side={2}
+        />
+      </mesh>
+      
+      <mesh position={[0, 0, -25]}>
+        <planeGeometry args={[60, 60]} />
+        <meshBasicMaterial 
+          color="#764ba2" 
           transparent 
           opacity={0.1}
           side={2}
         />
       </mesh>
       
-      {/* Optimized Planets */}
-      <Planet position={[8, 3, -5]} color="#ff6b6b" size={1.2} rotationSpeed={0.008} />
-      <Planet position={[-6, -2, 8]} color="#4ecdc4" size={0.8} rotationSpeed={0.012} />
-      <Planet position={[12, 5, 3]} color="#45b7d1" size={1.5} rotationSpeed={0.006} />
-      <Planet position={[-10, 1, -8]} color="#96ceb4" size={1.0} rotationSpeed={0.01} />
+      <mesh position={[0, 0, -20]}>
+        <planeGeometry args={[40, 40]} />
+        <meshBasicMaterial 
+          color="#f093fb" 
+          transparent 
+          opacity={0.08}
+          side={2}
+        />
+      </mesh>
       
-      {/* Optimized Rockets */}
-      <Rocket position={[5, -5, 0]} rotation={[0, 0, Math.PI / 6]} />
-      <Rocket position={[-8, -3, 5]} rotation={[0, 0, -Math.PI / 4]} />
-      <Rocket position={[0, -8, -10]} rotation={[0, 0, Math.PI / 3]} />
+      {/* Cosmic Dust Clouds */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <mesh 
+          key={`dust-${i}`}
+          position={[
+            (Math.random() - 0.5) * 40,
+            (Math.random() - 0.5) * 40,
+            -15 - Math.random() * 10
+          ]}
+        >
+          <sphereGeometry args={[2 + Math.random() * 3, 16, 16]} />
+          <meshBasicMaterial 
+            color={`hsl(${280 + Math.random() * 40}, 60%, 70%)`}
+            transparent 
+            opacity={0.03 + Math.random() * 0.05}
+            side={2}
+          />
+        </mesh>
+      ))}
       
-      {/* Optimized Astronauts */}
-      <Astronaut position={[3, 2, 5]} />
-      <Astronaut position={[-5, -1, -3]} />
+      {/* Star Clusters */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <group key={`cluster-${i}`} position={[
+          (Math.random() - 0.5) * 30,
+          (Math.random() - 0.5) * 30,
+          -10 - Math.random() * 5
+        ]}>
+          {Array.from({ length: 20 }).map((_, j) => (
+            <mesh key={`star-${i}-${j}`} position={[
+              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) * 8
+            ]}>
+              <sphereGeometry args={[0.02 + Math.random() * 0.03, 8, 8]} />
+              <meshBasicMaterial 
+                color={`hsl(${200 + Math.random() * 60}, 80%, 80%)`}
+                emissive={`hsl(${200 + Math.random() * 60}, 80%, 40%)`}
+              />
+            </mesh>
+          ))}
+        </group>
+      ))}
       
-      {/* Optimized Floating debris/asteroids */}
+      {/* Galactic Core Glow */}
+      <mesh position={[0, 0, -35]}>
+        <sphereGeometry args={[15, 32, 32]} />
+        <meshBasicMaterial 
+          color="#667eea"
+          transparent 
+          opacity={0.05}
+          side={2}
+        />
+      </mesh>
+      
+      <mesh position={[0, 0, -35]}>
+        <sphereGeometry args={[10, 32, 32]} />
+        <meshBasicMaterial 
+          color="#764ba2"
+          transparent 
+          opacity={0.08}
+          side={2}
+        />
+      </mesh>
+      
+      {/* Optimized Planets - Closer to camera */}
+      <Planet position={[3, 2, -3]} color="#ff6b6b" size={1.5} rotationSpeed={0.008} />
+      <Planet position={[-4, -1, 4]} color="#4ecdc4" size={1.2} rotationSpeed={0.012} />
+      <Planet position={[6, 3, 2]} color="#45b7d1" size={2.0} rotationSpeed={0.006} />
+      <Planet position={[-6, 1, -4]} color="#96ceb4" size={1.3} rotationSpeed={0.01} />
+      
+      {/* Optimized Rockets - Closer to camera */}
+      <Rocket position={[2, -3, 0]} rotation={[0, 0, Math.PI / 6]} />
+      <Rocket position={[-4, -2, 3]} rotation={[0, 0, -Math.PI / 4]} />
+      <Rocket position={[0, -4, -5]} rotation={[0, 0, Math.PI / 3]} />
+      
+      {/* Optimized Astronauts - Closer to camera */}
+      <Astronaut position={[2, 1, 3]} />
+      <Astronaut position={[-3, -1, -2]} />
+      
+      {/* Optimized Floating debris/asteroids - Closer to camera */}
       {Array.from({ length: 15 }).map((_, i) => (
         <Float key={i} speed={0.3} rotationIntensity={0.5} floatIntensity={0.2}>
           <mesh position={[
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 30
+            (Math.random() - 0.5) * 15,
+            (Math.random() - 0.5) * 15,
+            (Math.random() - 0.5) * 15
           ]}>
             <boxGeometry args={[0.1, 0.1, 0.1]} />
             <meshStandardMaterial 
               color="#888888"
               emissive="#444444"
-              emissiveIntensity={0.2}
+              emissiveIntensity={0.3}
             />
           </mesh>
         </Float>
       ))}
       
-      {/* Optimized Energy Particles */}
+      {/* Optimized Energy Particles - Closer to camera */}
       {Array.from({ length: 10 }).map((_, i) => (
         <Float key={`particle-${i}`} speed={1} rotationIntensity={0} floatIntensity={0.5}>
           <mesh position={[
-            (Math.random() - 0.5) * 20,
-            (Math.random() - 0.5) * 20,
-            (Math.random() - 0.5) * 20
+            (Math.random() - 0.5) * 10,
+            (Math.random() - 0.5) * 10,
+            (Math.random() - 0.5) * 10
           ]}>
-            <sphereGeometry args={[0.03, 6, 6]} />
+            <sphereGeometry args={[0.05, 6, 6]} />
             <meshBasicMaterial 
               color="#667eea"
               transparent
-              opacity={0.4}
+              opacity={0.6}
             />
           </mesh>
         </Float>

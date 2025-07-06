@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code, Users, Database, Cloud, Wrench, Brain } from 'lucide-react';
+import { Code, Database, Cloud, Wrench, Brain } from 'lucide-react';
 
 const Skills = () => {
   const technicalSkills = {
