@@ -1,42 +1,75 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code, Database, Cloud, Wrench, Brain } from 'lucide-react';
 
-const Skills = () => {
-  const technicalSkills = {
-    'Programming Languages': [
-      'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust'
-    ],
-    'Frontend Development': [
-      'React', 'Vue.js', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'SASS/SCSS', 'Tailwind CSS'
-    ],
-    'Backend Development': [
-      'Node.js', 'Express', 'Django', 'Spring Boot', 'FastAPI', 'GraphQL', 'REST APIs'
-    ],
-    'Databases': [
-      'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Elasticsearch', 'Firebase'
-    ],
-    'Cloud & DevOps': [
-      'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'CI/CD', 'Jenkins'
-    ],
-    'Tools & Technologies': [
-      'Git', 'VS Code', 'Postman', 'Jira', 'Figma', 'Webpack', 'Babel'
-    ]
-  };
+interface TechnicalSkill {
+  _id?: string;
+  name: string;
+  category: string;
+  proficiency: number;
+  icon?: string;
+  color?: string;
+  description?: string;
+  isActive?: boolean;
+  order?: number;
+}
 
-  const softSkills = [
-    'Problem Solving', 'Critical Thinking', 'Analytical Skills', 'Creativity',
-    'Communication', 'Team Collaboration', 'Leadership', 'Time Management',
-    'Adaptability', 'Continuous Learning', 'Attention to Detail', 'Project Management'
-  ];
+interface SoftSkill {
+  _id?: string;
+  name: string;
+  category: string;
+  proficiency: number;
+  icon?: string;
+  color?: string;
+  description?: string;
+  isActive?: boolean;
+  order?: number;
+}
+
+const Skills = () => {
+  const [technicalSkills, setTechnicalSkills] = useState<TechnicalSkill[]>([]);
+  const [softSkills, setSoftSkills] = useState<SoftSkill[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      fetch('http://localhost:5000/api/technical-skills').then(res => res.json()),
+      fetch('http://localhost:5000/api/soft-skills').then(res => res.json())
+    ])
+      .then(([techData, softData]) => {
+        setTechnicalSkills(techData.data || []);
+        setSoftSkills(softData.data || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Failed to load skills');
+        setLoading(false);
+      });
+  }, []);
+
+  // Group technical skills by category
+  const groupedTechSkills = technicalSkills.reduce((acc, skill) => {
+    if (!acc[skill.category]) acc[skill.category] = [];
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, TechnicalSkill[]>);
 
   const skillIcons = {
     'Programming Languages': <Code size={24} />,
+    'Frontend': <Code size={24} />,
     'Frontend Development': <Code size={24} />,
+    'Backend': <Code size={24} />,
     'Backend Development': <Code size={24} />,
+    'Database': <Database size={24} />,
     'Databases': <Database size={24} />,
+    'Cloud': <Cloud size={24} />,
     'Cloud & DevOps': <Cloud size={24} />,
-    'Tools & Technologies': <Wrench size={24} />
+    'DevOps': <Cloud size={24} />,
+    'Tools': <Wrench size={24} />,
+    'Tools & Technologies': <Wrench size={24} />,
+    'Other': <Wrench size={24} />
   };
 
   return (
@@ -55,45 +88,51 @@ const Skills = () => {
       >
         Technical Skills
       </motion.h1>
-      
-      <motion.div
-        className="skills-grid"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        {Object.entries(technicalSkills).map(([category, skills], index) => (
-          <motion.div
-            key={category}
-            className="skill-category"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-              <div style={{ marginRight: '10px', color: '#667eea' }}>
-                {skillIcons[category as keyof typeof skillIcons]}
+      {loading ? (
+        <p style={{ color: '#ccc' }}>Loading...</p>
+      ) : error ? (
+        <p style={{ color: 'red' }}>{error}</p>
+      ) : (
+        <motion.div
+          className="skills-grid"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          {Object.entries(groupedTechSkills).map(([category, skills], index) => (
+            <motion.div
+              key={category}
+              className="skill-category"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                <div style={{ marginRight: '10px', color: '#667eea' }}>
+                  {skillIcons[category as keyof typeof skillIcons] || <Wrench size={24} />}
+                </div>
+                <h3>{category}</h3>
               </div>
-              <h3>{category}</h3>
-            </div>
-            <div className="skill-list">
-              {skills.map((skill, skillIndex) => (
-                <motion.span
-                  key={skill}
-                  className="skill-item"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.8 + skillIndex * 0.05 }}
-                  whileHover={{ scale: 1.1 }}
-                >
-                  {skill}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+              <div className="skill-list">
+                {skills.map((skill, skillIndex) => (
+                  <motion.span
+                    key={skill._id || skill.name}
+                    className="skill-item"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.8 + skillIndex * 0.05 }}
+                    whileHover={{ scale: 1.1 }}
+                    style={skill.color ? { background: skill.color, color: '#fff' } : {}}
+                  >
+                    {skill.name}
+                  </motion.span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -109,34 +148,39 @@ const Skills = () => {
         >
           Soft Skills
         </motion.h1>
-        
-        <motion.div
-          className="skill-category"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          style={{ marginTop: '30px' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-            <Brain size={24} style={{ marginRight: '10px', color: '#667eea' }} />
-            <h3>Professional & Interpersonal Skills</h3>
-          </div>
-          <div className="skill-list">
-            {softSkills.map((skill, index) => (
-              <motion.span
-                key={skill}
-                className="skill-item"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 1.4 + index * 0.05 }}
-                whileHover={{ scale: 1.1 }}
-                style={{ background: 'linear-gradient(45deg, #764ba2, #667eea)' }}
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
+        {loading ? (
+          <p style={{ color: '#ccc' }}>Loading...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : (
+          <motion.div
+            className="skill-category"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            style={{ marginTop: '30px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <Brain size={24} style={{ marginRight: '10px', color: '#667eea' }} />
+              <h3>Professional & Interpersonal Skills</h3>
+            </div>
+            <div className="skill-list">
+              {softSkills.map((skill, index) => (
+                <motion.span
+                  key={skill._id || skill.name}
+                  className="skill-item"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 1.4 + index * 0.05 }}
+                  whileHover={{ scale: 1.1 }}
+                  style={skill.color ? { background: skill.color, color: '#fff' } : { background: 'linear-gradient(45deg, #764ba2, #667eea)' }}
+                >
+                  {skill.name}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </motion.div>
 
       <motion.div

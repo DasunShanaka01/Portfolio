@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Code, GraduationCap, Award, FolderOpen, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Home, User, Code, GraduationCap, Award, FolderOpen, Mail, Settings } from 'lucide-react';
 
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -85,6 +86,10 @@ const Navigation = () => {
         <Mail size={20} />
         <span>Contact</span>
       </button>
+      <Link to="/admin" className="nav-link admin-link">
+        <Settings size={20} />
+        <span>Admin</span>
+      </Link>
     </nav>
   );
 };

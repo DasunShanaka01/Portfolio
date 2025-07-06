@@ -1,8 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, MapPin, Mail, Phone, Linkedin, Github, Camera } from 'lucide-react';
 
+interface ProfessionalSummary {
+  _id?: string;
+  title: string;
+  summary: string;
+  experience: string;
+  location: string;
+  email: string;
+  phone: string;
+  isActive: boolean;
+  order: number;
+}
+
 const About = () => {
+  const [summary, setSummary] = useState<ProfessionalSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch('http://localhost:5000/api/professional-summary')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.data && data.data.length > 0) {
+          setSummary(data.data[0]);
+        } else {
+          setSummary(null);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Failed to load summary');
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <motion.div
       id="about"
@@ -19,7 +53,6 @@ const About = () => {
       >
         About Me
       </motion.h1>
-      
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,31 +105,23 @@ const About = () => {
               }}
             />
           </div>
-          
-
         </motion.div>
-
         {/* Right Column - Content */}
         <div>
           <h2 style={{ color: '#667eea', fontSize: '1.5rem', marginBottom: '20px' }}>
             Professional Summary
           </h2>
-          <p style={{ color: '#ccc', lineHeight: '1.8', marginBottom: '20px' }}>
-            I am a passionate and innovative software engineer with a strong foundation in full-stack development 
-            and a keen eye for creating elegant, efficient solutions to complex problems. With expertise in 
-            modern web technologies, I specialize in building scalable applications that deliver exceptional 
-            user experiences.
-          </p>
-          <p style={{ color: '#ccc', lineHeight: '1.8', marginBottom: '20px' }}>
-            My journey in software development began with a curiosity about how things work, which evolved 
-            into a passion for creating digital solutions that make a difference. I believe in writing clean, 
-            maintainable code and staying up-to-date with the latest industry trends and best practices.
-          </p>
-          <p style={{ color: '#ccc', lineHeight: '1.8', marginBottom: '30px' }}>
-            When I'm not coding, you can find me exploring new technologies, contributing to open-source 
-            projects, or sharing knowledge with the developer community. I'm always excited to take on 
-            new challenges and collaborate with talented teams to build amazing products.
-          </p>
+          {loading ? (
+            <p style={{ color: '#ccc' }}>Loading...</p>
+          ) : error ? (
+            <p style={{ color: 'red' }}>{error}</p>
+          ) : summary ? (
+            <>
+              <p style={{ color: '#ccc', lineHeight: '1.8', marginBottom: '20px' }}>{summary.summary}</p>
+            </>
+          ) : (
+            <p style={{ color: '#ccc' }}>No summary available.</p>
+          )}
 
           <h2 style={{ color: '#667eea', fontSize: '1.5rem', marginBottom: '20px' }}>
             Personal Information
@@ -104,19 +129,19 @@ const About = () => {
           <div style={{ marginBottom: '30px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <User size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>Software Engineer</span>
+              <span style={{ color: '#ccc' }}>{summary?.title || 'Software Engineer'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <MapPin size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>Your Location</span>
+              <span style={{ color: '#ccc' }}>{summary?.location || 'Your Location'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Mail size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>your.email@example.com</span>
+              <span style={{ color: '#ccc' }}>{summary?.email || 'your.email@example.com'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Phone size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>+1 (555) 123-4567</span>
+              <span style={{ color: '#ccc' }}>{summary?.phone || '+1 (555) 123-4567'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Linkedin size={20} style={{ marginRight: '10px', color: '#667eea' }} />
@@ -129,7 +154,6 @@ const About = () => {
           </div>
         </div>
       </motion.div>
-      
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

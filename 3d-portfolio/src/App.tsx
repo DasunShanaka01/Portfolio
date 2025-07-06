@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import './App.css';
@@ -12,6 +12,8 @@ import Education from './components/Education';
 import Certificates from './components/Certificates';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import AdminPanel from './components/AdminPanel';
+import './components/AdminPanel.css';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -73,46 +75,54 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <div className="App">
-          <Navigation />
-          <div className="canvas-container">
-            <Canvas
-              camera={{ position: [0, 0, 8], fov: 60 }}
-              style={{ 
-                background: '#000000',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%'
-              }}
-              onError={(error) => {
-                console.error('Canvas error:', error);
-              }}
-            >
-              <SpaceScene />
-              <OrbitControls 
-                enableZoom={false} 
-                enablePan={false}
-                enableRotate={false}
-                autoRotate={true}
-                autoRotateSpeed={1.0}
-                dampingFactor={0.1}
-              />
-            </Canvas>
-          </div>
-          <div className="content-overlay">
-            <div className="scrollable-content">
-              <Home />
-              <About />
-              <Skills />
-              <Education />
-              <Certificates />
-              <Projects />
-              <Contact />
+        <Routes>
+          {/* Admin Panel Route */}
+          <Route path="/admin" element={<AdminPanel />} />
+          
+          {/* Main Portfolio Route */}
+          <Route path="/*" element={
+            <div className="App">
+              <Navigation />
+              <div className="canvas-container">
+                <Canvas
+                  camera={{ position: [0, 0, 8], fov: 60 }}
+                  style={{ 
+                    background: '#000000',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%'
+                  }}
+                  onError={(error) => {
+                    console.error('Canvas error:', error);
+                  }}
+                >
+                  <SpaceScene />
+                  <OrbitControls 
+                    enableZoom={false} 
+                    enablePan={false}
+                    enableRotate={false}
+                    autoRotate={true}
+                    autoRotateSpeed={1.0}
+                    dampingFactor={0.1}
+                  />
+                </Canvas>
+              </div>
+              <div className="content-overlay">
+                <div className="scrollable-content">
+                  <Home />
+                  <About />
+                  <Skills />
+                  <Education />
+                  <Certificates />
+                  <Projects />
+                  <Contact />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          } />
+        </Routes>
       </Router>
     </ErrorBoundary>
   );
