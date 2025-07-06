@@ -144,11 +144,7 @@ const AdminPanel: React.FC = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [formData, setFormData] = useState<any>({});
 
-  // Load data on component mount
-  useEffect(() => {
-    loadData();
-  }, [activeTab, loadData]);
-
+  // Move loadData above useEffect
   const loadData = async () => {
     setLoading(true);
     try {
@@ -200,6 +196,11 @@ const AdminPanel: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Load data on component mount
+  useEffect(() => {
+    loadData();
+  }, [activeTab, loadData]);
 
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text });
