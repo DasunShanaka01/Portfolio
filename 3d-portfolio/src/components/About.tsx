@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, MapPin, Mail, Phone, Linkedin, Github, Camera } from 'lucide-react';
+import { User, MapPin, Mail, Phone, Linkedin, Github } from 'lucide-react';
 
 interface ProfessionalSummary {
   _id?: string;

@@ -2,37 +2,6 @@ import React, { useRef, useState, Suspense } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Custom 3D Camera Component - Enhanced for auto-rotation
-const CustomCamera = () => {
-  const { camera } = useThree();
-  const timeRef = useRef(0);
-
-  useFrame((state) => {
-    timeRef.current += state.clock.getDelta();
-    const time = timeRef.current;
-    
-    // Enhanced 3D orbital camera movement
-    const radius = 8;
-    const speed = 0.15;
-    
-    // More pronounced orbital movement
-    camera.position.x = Math.sin(time * speed) * radius * 0.4;
-    camera.position.y = Math.cos(time * speed * 0.8) * radius * 0.3;
-    camera.position.z = 8 + Math.sin(time * speed * 0.6) * 0.8;
-    
-    // Look at the center of the scene
-    camera.lookAt(0, 0, 0);
-    
-    // Enhanced camera shake for more dynamic feel
-    const shakeIntensity = 0.015;
-    camera.position.x += Math.sin(time * 12) * shakeIntensity;
-    camera.position.y += Math.cos(time * 10) * shakeIntensity;
-    camera.position.z += Math.sin(time * 8) * shakeIntensity * 0.5;
-  });
-
-  return null;
-};
-
 // Loading component for Suspense fallback
 const LoadingFallback = () => (
   <mesh position={[0, 0, 0]}>

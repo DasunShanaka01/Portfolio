@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Award, Calendar, MapPin, Image as ImageIcon } from 'lucide-react';
+import { GraduationCap, Calendar, MapPin, Image as ImageIcon } from 'lucide-react';
 
 interface EducationItem {
   _id?: string;

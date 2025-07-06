@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Plus, Edit, Trash2, Eye, Save, X, 
+  Plus, Edit, Trash2, Save, X, 
   User, Code, GraduationCap, Award, 
   FolderOpen, MessageCircle, Share2, 
   CheckCircle, AlertCircle, Loader
@@ -147,7 +147,7 @@ const AdminPanel: React.FC = () => {
   // Load data on component mount
   useEffect(() => {
     loadData();
-  }, [activeTab]);
+  }, [activeTab, loadData]);
 
   const loadData = async () => {
     setLoading(true);
