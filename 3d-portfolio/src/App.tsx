@@ -93,6 +93,7 @@ function Section({ children, id }: { children: React.ReactNode, id: string }) {
 
 function App() {
   const [muted, setMuted] = useState(false);
+  const [musicStarted, setMusicStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -102,6 +103,40 @@ function App() {
     }
   }, [muted]);
 
+  // Try to autoplay on mount, and if blocked, start on first user interaction
+  useEffect(() => {
+    const tryPlay = () => {
+      if (audioRef.current && !musicStarted) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            setMusicStarted(true);
+          }).catch(() => {
+            // Autoplay blocked, wait for user interaction
+          });
+        }
+      }
+    };
+    tryPlay();
+    if (!musicStarted) {
+      const startOnUserAction = () => {
+        tryPlay();
+        setMusicStarted(true);
+        window.removeEventListener('click', startOnUserAction);
+        window.removeEventListener('keydown', startOnUserAction);
+        window.removeEventListener('touchstart', startOnUserAction);
+      };
+      window.addEventListener('click', startOnUserAction);
+      window.addEventListener('keydown', startOnUserAction);
+      window.addEventListener('touchstart', startOnUserAction);
+      return () => {
+        window.removeEventListener('click', startOnUserAction);
+        window.removeEventListener('keydown', startOnUserAction);
+        window.removeEventListener('touchstart', startOnUserAction);
+      };
+    }
+  }, [musicStarted]);
+
   const handleToggleMute = () => {
     setMuted((prev) => !prev);
   };
@@ -110,7 +145,6 @@ function App() {
     <ErrorBoundary>
       <Router>
         <Routes>
-          
           {/* Main Portfolio Route */}
           <Route path="/*" element={
             <div className="App">
