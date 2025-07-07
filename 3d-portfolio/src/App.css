@@ -609,11 +609,11 @@ body {
     box-sizing: border-box;
   }
   .section-title {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+    font-size: 1.7rem;
+    margin-bottom: 18px;
   }
   .hero-title {
-    font-size: 1.2rem;
+    font-size: 2.1rem;
     margin-bottom: 10px;
   }
   .music-toggle-btn {
@@ -629,17 +629,42 @@ body {
     display: block !important;
     grid-template-columns: 1fr !important;
     gap: 20px !important;
+    width: 100vw !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   .about-grid > div, .contact-grid > div {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 0 20px 0 !important;
   }
   .about-grid img, .about-grid .photo-container {
     width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
     min-width: 0 !important;
+    display: block;
+    margin: 0 auto;
+  }
+  .content-section img,
+  .content-section h1,
+  .content-section h2,
+  .content-section h3,
+  .content-section p,
+  .content-section input,
+  .content-section textarea {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  .content-section form {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
