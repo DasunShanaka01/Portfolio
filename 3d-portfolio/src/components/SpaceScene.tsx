@@ -976,7 +976,26 @@ const SpaceBackground360 = () => {
 };
 
 // 360-degree starfield
-const Starfield360 = ({ count = 2000, radius = 95 }) => {
+const Starfield360 = ({ count = 1000, radius = 95 }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  // Store random phase for each star
+  const phases = useRef(Array.from({ length: count }, () => Math.random() * Math.PI * 2));
+
+  useFrame(({ clock }) => {
+    if (groupRef.current) {
+      groupRef.current.children.forEach((star, i) => {
+        const phase = phases.current[i];
+        const twinkle = 0.7 + 0.3 * Math.sin(clock.elapsedTime * 1.5 + phase);
+        const mesh = star as THREE.Mesh;
+        const material = mesh.material as THREE.Material & { opacity?: number; transparent?: boolean };
+        if (material) {
+          material.opacity = twinkle;
+          material.transparent = true;
+        }
+      });
+    }
+  });
+
   const stars = Array.from({ length: count }).map((_, i) => {
     // Spherical coordinates
     const theta = Math.acos(2 * Math.random() - 1); // polar angle
@@ -986,12 +1005,26 @@ const Starfield360 = ({ count = 2000, radius = 95 }) => {
     const z = radius * Math.cos(theta);
     return (
       <mesh key={i} position={[x, y, z]}>
-        <sphereGeometry args={[0.18 + Math.random() * 0.12, 6, 6]} />
+        <sphereGeometry args={[0.08 + Math.random() * 0.07, 6, 6]} />
         <meshBasicMaterial color="#fff" />
       </mesh>
     );
   });
-  return <>{stars}</>;
+  return <group ref={groupRef}>{stars}</group>;
+};
+
+// Classic meteor shower: top left to bottom right
+const MeteorShower = ({ count = 10, speed = 0.25, size = 3 }) => {
+  const meteors = Array.from({ length: count }).map((_, i) => {
+    // Start closer to the camera, top left
+    const x = -20 - Math.random() * 10;
+    const y = 20 + Math.random() * 10;
+    const z = -5 + Math.random() * 10;
+    // Direction: down and to the right (positive x, negative y, positive z)
+    const meteorDirection: [number, number, number] = [1, -1, 0.5];
+    return <Meteor key={i} color="#aaf6ff" speed={speed} size={size} startPosition={[x, y, z]} direction={meteorDirection} />;
+  });
+  return <>{meteors}</>;
 };
 
 const SpaceScene = () => {
