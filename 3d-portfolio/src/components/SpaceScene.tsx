@@ -1074,8 +1074,6 @@ const SpaceScene = () => {
   return (
     <group ref={sceneRef}>
       <Suspense fallback={<LoadingFallback />}>
-        {/* 360° Space Background */}
-        <SpaceBackground360 />
         {/* 360° Starfield */}
         <Starfield360 count={1000} radius={95} />
         {/* Enhanced Lighting - Brighter for visibility */}
