@@ -12,8 +12,6 @@ import Education from './components/Education';
 import Certificates from './components/Certificates';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
-import AdminPanel from './components/AdminPanel';
-import './components/AdminPanel.css';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -76,8 +74,6 @@ function App() {
     <ErrorBoundary>
       <Router>
         <Routes>
-          {/* Admin Panel Route */}
-          <Route path="/admin" element={<AdminPanel />} />
           
           {/* Main Portfolio Route */}
           <Route path="/*" element={

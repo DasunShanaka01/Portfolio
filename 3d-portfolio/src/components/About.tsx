@@ -15,27 +15,19 @@ interface ProfessionalSummary {
 }
 
 const About = () => {
-  const [summary, setSummary] = useState<ProfessionalSummary | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch('/api/professional-summary')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.data && data.data.length > 0) {
-          setSummary(data.data[0]);
-        } else {
-          setSummary(null);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        setError('Failed to load summary');
-        setLoading(false);
-      });
-  }, []);
+  // Updated static data for Dasun Shanaka
+  const [summary] = useState<ProfessionalSummary | null>({
+    title: 'Software Engineering Undergraduate',
+    summary: `I'm Dasun Shanaka, a passionate and self-driven Software Engineering undergraduate based in Colombo, Sri Lanka. I specialize in full-stack web and mobile application development, with hands-on experience using modern technologies like Java, React.js, Node.js, MongoDB, and Android Studio.\n\nI’m deeply interested in solving real-world problems through efficient, scalable, and user-focused software solutions. Whether it's a dynamic food delivery platform or a repair service marketplace, I enjoy building meaningful applications that create impact.\n\nWith a strong foundation in object-oriented programming, an eye for UI/UX, and a growing understanding of system design, I continuously strive to learn, innovate, and collaborate. I'm also committed to improving my communication and leadership skills through team projects and public presentations.`,
+    experience: '',
+    location: 'Colombo, Sri Lanka',
+    email: 'dasunshanaka01@outlook.com',
+    phone: '+94 781123032',
+    isActive: true,
+    order: 1,
+  });
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
 
   return (
     <motion.div
@@ -129,27 +121,27 @@ const About = () => {
           <div style={{ marginBottom: '30px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <User size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>{summary?.title || 'Software Engineer'}</span>
+              <span style={{ color: '#ccc' }}>Dasun Shanaka</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <MapPin size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>{summary?.location || 'Your Location'}</span>
+              <span style={{ color: '#ccc' }}>Colombo, Sri Lanka</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Mail size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>{summary?.email || 'your.email@example.com'}</span>
+              <span style={{ color: '#ccc' }}>dasunshanaka01@outlook.com</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Phone size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>{summary?.phone || '+1 (555) 123-4567'}</span>
+              <span style={{ color: '#ccc' }}>{summary?.phone || ''}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Linkedin size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>linkedin.com/in/yourprofile</span>
+              <a href="https://www.linkedin.com/in/dasun-shanaka-756559250" style={{ color: '#ccc', textDecoration: 'underline' }} target="_blank" rel="noopener noreferrer">linkedin.com/in/dasun-shanaka-756559250</a>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <Github size={20} style={{ marginRight: '10px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>github.com/yourusername</span>
+              <a href="https://github.com/DasunShanaka01" style={{ color: '#ccc', textDecoration: 'underline' }} target="_blank" rel="noopener noreferrer">github.com/DasunShanaka01</a>
             </div>
           </div>
         </div>
@@ -194,10 +186,9 @@ const About = () => {
             borderRadius: '15px', 
             border: '1px solid rgba(255, 255, 255, 0.1)' 
           }}>
-            <h3 style={{ color: '#667eea', marginBottom: '10px' }}>DevOps & Cloud</h3>
+            <h3 style={{ color: '#667eea', marginBottom: '10px' }}>Mobile Application Development</h3>
             <p style={{ color: '#ccc', fontSize: '0.9rem' }}>
-              Implementing CI/CD pipelines, containerization with Docker, and cloud deployment 
-              strategies to ensure scalable and reliable applications.
+              Designing and developing mobile applications for Android using Java and Android Studio, focusing on intuitive UI/UX and performance.
             </p>
           </div>
         </div>

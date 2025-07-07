@@ -27,23 +27,35 @@ const formatYear = (dateStr: string) => {
 };
 
 const Education = () => {
-  const [educationData, setEducationData] = useState<EducationItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch('/api/education')
-      .then(res => res.json())
-      .then(data => {
-        setEducationData(data.data || []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Failed to load education data');
-        setLoading(false);
-      });
-  }, []);
+  // Updated education data
+  const [educationData] = useState<EducationItem[]>([
+    {
+      institution: 'Sri Lanka Institute of Information Technology (SLIIT)',
+      degree: 'B.Sc. (Hons) in Information Technology Specializing in Software Engineering',
+      field: 'Software Engineering',
+      startDate: '2023-01-01',
+      endDate: '',
+      isCurrent: true,
+      gpa: 0,
+      description: `Currently pursuing a bachelor\'s degree specializing in Software Engineering. Gaining hands-on experience in software development, object-oriented programming, full-stack web and mobile application development, database management, and system design. Continuously learning to build efficient, scalable, and user-centered software solutions using modern tools and technologies.`,
+      achievements: [],
+      location: 'Colombo, Sri Lanka',
+    },
+    {
+      institution: 'Carey College',
+      degree: 'Advance Level : Commerce',
+      field: 'Commerce',
+      startDate: '2010-01-01',
+      endDate: '2022-12-31',
+      isCurrent: false,
+      gpa: 0,
+      description: `Completed secondary education with a focus on Commerce subjects, including Accounting, Business Studies, and Economics, providing a solid foundation in financial principles, business operations, and economic systems—skills that support analytical thinking and decision-making in the field of information technology.`,
+      achievements: [],
+      location: 'Colombo, Sri Lanka',
+    },
+  ]);
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
 
   return (
     <motion.div

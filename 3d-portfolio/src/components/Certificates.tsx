@@ -3,67 +3,43 @@ import { motion } from 'framer-motion';
 import { Award, Calendar, ExternalLink, Star } from 'lucide-react';
 
 const Certificates = () => {
-  const certificatesData = [
+  // Updated certificates and achievements
+  const certificates = [
     {
-      title: 'AWS Certified Solutions Architect - Associate',
-      issuer: 'Amazon Web Services',
-      date: 'December 2023',
-      credentialId: 'AWS-123456789',
-      description: 'Demonstrates expertise in designing distributed systems on AWS platform.',
-      skills: ['AWS', 'Cloud Architecture', 'DevOps', 'Infrastructure'],
-      level: 'Professional',
-      validUntil: 'December 2026'
+      title: 'Python Programming',
+      issuer: 'University of Moratuwa',
+      issueDate: '2025',
+      credentialId: 'WFkqPxCf5y',
+      url: 'https://open.uom.lk/lms/mod/customcert/verify_certificate.php',
     },
     {
-      title: 'Google Cloud Professional Cloud Developer',
-      issuer: 'Google Cloud',
-      date: 'November 2023',
-      credentialId: 'GCP-987654321',
-      description: 'Validates ability to build scalable applications on Google Cloud Platform.',
-      skills: ['Google Cloud', 'App Engine', 'Cloud Functions', 'Kubernetes'],
-      level: 'Professional',
-      validUntil: 'November 2026'
+      title: 'Python for Beginners',
+      issuer: 'University of Moratuwa',
+      issueDate: '2024',
+      credentialId: 'CimF5y7YAk',
+      url: 'https://open.uom.lk/lms/mod/customcert/verify_certificate.php',
     },
     {
-      title: 'Microsoft Certified: Azure Developer Associate',
-      issuer: 'Microsoft',
-      date: 'October 2023',
-      credentialId: 'AZ-204-123456',
-      description: 'Proves expertise in developing solutions for Microsoft Azure.',
-      skills: ['Azure', 'C#', '.NET', 'Azure DevOps'],
-      level: 'Associate',
-      validUntil: 'October 2026'
+      title: 'Web Design for Beginners',
+      issuer: 'University of Moratuwa',
+      issueDate: '2024',
+      credentialId: 'ue5zAsBGsB',
+      url: 'https://open.uom.lk/lms/mod/customcert/verify_certificate.php',
     },
     {
-      title: 'Certified Kubernetes Administrator (CKA)',
-      issuer: 'Cloud Native Computing Foundation',
-      date: 'September 2023',
-      credentialId: 'CKA-2023-001234',
-      description: 'Demonstrates ability to perform the responsibilities of a Kubernetes administrator.',
-      skills: ['Kubernetes', 'Container Orchestration', 'DevOps', 'Linux'],
-      level: 'Professional',
-      validUntil: 'September 2026'
+      title: 'Intermediate SQL',
+      issuer: 'datacamp',
+      issueDate: '2025',
+      credentialId: '',
+      url: 'https://www.datacamp.com/completed/statement-of-accomplishment/course/25a09ba153dfa35585046de1cb7e6dd1e1b2fafc',
     },
     {
-      title: 'MongoDB Certified Developer',
-      issuer: 'MongoDB University',
-      date: 'August 2023',
-      credentialId: 'MDB-2023-567890',
-      description: 'Validates expertise in MongoDB application development and data modeling.',
-      skills: ['MongoDB', 'NoSQL', 'Database Design', 'JavaScript'],
-      level: 'Associate',
-      validUntil: 'August 2026'
+      title: 'Joining Data in SQL',
+      issuer: 'datacamp',
+      issueDate: '2025',
+      credentialId: '',
+      url: 'https://www.datacamp.com/completed/statement-of-accomplishment/course/48e1a5b6397ef56bc11235b71dcd9c6345b11710',
     },
-    {
-      title: 'React Developer Certification',
-      issuer: 'Meta',
-      date: 'July 2023',
-      credentialId: 'META-REACT-2023',
-      description: 'Demonstrates proficiency in React development and modern JavaScript.',
-      skills: ['React', 'JavaScript', 'Frontend Development', 'Web Development'],
-      level: 'Professional',
-      validUntil: 'July 2026'
-    }
   ];
 
   const getLevelColor = (level: string) => {
@@ -101,23 +77,23 @@ const Certificates = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        {certificatesData.map((certificate, index) => (
+        {certificates.map((cert, idx) => (
           <motion.div
-            key={index}
+            key={idx}
             className="certificate-item"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+            transition={{ duration: 0.6, delay: 0.6 + idx * 0.1 }}
             whileHover={{ scale: 1.02 }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Award size={24} style={{ marginRight: '10px', color: '#667eea' }} />
-                <h2 className="certificate-title">{certificate.title}</h2>
+                <h2 className="certificate-title">{cert.title}</h2>
               </div>
               <span
                 style={{
-                  background: getLevelColor(certificate.level),
+                  background: '#667eea', // Default color for new certificates
                   color: 'white',
                   padding: '4px 12px',
                   borderRadius: '20px',
@@ -125,49 +101,27 @@ const Certificates = () => {
                   fontWeight: 'bold'
                 }}
               >
-                {certificate.level}
+                {cert.issuer}
               </span>
             </div>
             
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
               <Calendar size={16} style={{ marginRight: '8px', color: '#667eea' }} />
-              <span className="certificate-date">Issued: {certificate.date}</span>
+              <span className="certificate-date">Issued: {cert.issueDate}</span>
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <Star size={16} style={{ marginRight: '8px', color: '#667eea' }} />
-              <span style={{ color: '#ccc' }}>Valid until: {certificate.validUntil}</span>
-            </div>
+            {cert.credentialId && (
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <Star size={16} style={{ marginRight: '8px', color: '#667eea' }} />
+                <span style={{ color: '#ccc' }}>Credential ID: {cert.credentialId}</span>
+              </div>
+            )}
             
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <ExternalLink size={16} style={{ marginRight: '8px', color: '#667eea' }} />
-              <span style={{ color: '#ccc', fontFamily: 'monospace' }}>ID: {certificate.credentialId}</span>
-            </div>
-            
-            <p style={{ color: '#ccc', lineHeight: '1.6', marginBottom: '15px' }}>
-              {certificate.description}
-            </p>
-            
-            <div>
-              <h3 style={{ color: '#667eea', fontSize: '1rem', marginBottom: '10px' }}>
-                Skills Validated
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {certificate.skills.map((skill, skillIndex) => (
-                  <span
-                    key={skillIndex}
-                    style={{
-                      background: 'rgba(102, 126, 234, 0.2)',
-                      padding: '5px 10px',
-                      borderRadius: '15px',
-                      fontSize: '0.8rem',
-                      color: '#667eea'
-                    }}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              <a href={cert.url} target="_blank" rel="noopener noreferrer" style={{ color: '#ccc', fontFamily: 'monospace' }}>
+                View Certificate
+              </a>
             </div>
           </motion.div>
         ))}

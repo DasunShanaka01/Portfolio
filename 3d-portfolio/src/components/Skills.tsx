@@ -27,27 +27,54 @@ interface SoftSkill {
 }
 
 const Skills = () => {
-  const [technicalSkills, setTechnicalSkills] = useState<TechnicalSkill[]>([]);
-  const [softSkills, setSoftSkills] = useState<SoftSkill[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      fetch('/api/technical-skills').then(res => res.json()),
-      fetch('/api/soft-skills').then(res => res.json())
-    ])
-      .then(([techData, softData]) => {
-        setTechnicalSkills(techData.data || []);
-        setSoftSkills(softData.data || []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Failed to load skills');
-        setLoading(false);
-      });
-  }, []);
+  // Updated technical skills grouped by category with corrected spellings
+  const [technicalSkills] = useState<TechnicalSkill[]>([
+    // Programming Languages
+    { name: 'Java', category: 'Programming Languages', proficiency: 90 },
+    { name: 'JavaScript', category: 'Programming Languages', proficiency: 90 },
+    { name: 'Python', category: 'Programming Languages', proficiency: 85 },
+    { name: 'PHP', category: 'Programming Languages', proficiency: 80 },
+    { name: 'C', category: 'Programming Languages', proficiency: 80 },
+    { name: 'C++', category: 'Programming Languages', proficiency: 80 },
+    { name: 'R', category: 'Programming Languages', proficiency: 70 },
+    // Web Development
+    { name: 'HTML', category: 'Web Development', proficiency: 90 },
+    { name: 'CSS', category: 'Web Development', proficiency: 90 },
+    { name: 'React.js', category: 'Web Development', proficiency: 85 },
+    { name: 'Node.js', category: 'Web Development', proficiency: 80 },
+    { name: 'Express.js', category: 'Web Development', proficiency: 80 },
+    { name: 'Spring Boot', category: 'Web Development', proficiency: 75 },
+    { name: 'Tailwind CSS', category: 'Web Development', proficiency: 75 },
+    // Database Systems
+    { name: 'MongoDB', category: 'Database Systems', proficiency: 80 },
+    { name: 'SQL', category: 'Database Systems', proficiency: 85 },
+    { name: 'NoSQL', category: 'Database Systems', proficiency: 75 },
+    { name: 'Normalization', category: 'Database Systems', proficiency: 70 },
+    // Mobile Development
+    { name: 'React Native', category: 'Mobile Development', proficiency: 75 },
+    { name: 'Kotlin', category: 'Mobile Development', proficiency: 70 },
+    { name: 'Android Studio + Java', category: 'Mobile Development', proficiency: 80 },
+    // Tools & Platforms
+    { name: 'Git & GitHub', category: 'Tools & Platforms', proficiency: 85 },
+    { name: 'Postman', category: 'Tools & Platforms', proficiency: 80 },
+    { name: 'VS Code', category: 'Tools & Platforms', proficiency: 85 },
+    { name: 'Eclipse', category: 'Tools & Platforms', proficiency: 75 },
+    { name: 'MySQL Workbench', category: 'Tools & Platforms', proficiency: 75 },
+    { name: 'Vercel', category: 'Tools & Platforms', proficiency: 70 },
+    { name: 'IntelliJ', category: 'Tools & Platforms', proficiency: 70 },
+    { name: 'Figma', category: 'Tools & Platforms', proficiency: 70 },
+  ]);
+  const [softSkills] = useState<SoftSkill[]>([
+    { name: 'Communication Skills', category: 'Professional & Interpersonal Skills', proficiency: 90 },
+    { name: 'Teamwork & Collaboration', category: 'Professional & Interpersonal Skills', proficiency: 90 },
+    { name: 'Problem-Solving', category: 'Professional & Interpersonal Skills', proficiency: 85 },
+    { name: 'Time Management', category: 'Professional & Interpersonal Skills', proficiency: 85 },
+    { name: 'Critical Thinking', category: 'Professional & Interpersonal Skills', proficiency: 80 },
+    { name: 'Adaptability', category: 'Professional & Interpersonal Skills', proficiency: 80 },
+    { name: 'Project Management', category: 'Professional & Interpersonal Skills', proficiency: 80 },
+  ]);
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
 
   // Group technical skills by category
   const groupedTechSkills = technicalSkills.reduce((acc, skill) => {

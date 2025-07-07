@@ -82,7 +82,7 @@ INTERESTS
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Hi, <br />I'm Dasun Shanaka
+          Hi there!, <br />I'm Dasun Shanaka
         </motion.h1>
         <motion.p
           className="hero-subtitle"
@@ -90,7 +90,7 @@ INTERESTS
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          Software Engineering Student | Full-Stack Developer
+          Software Engineering Student | Full-Stack Developer | Software Developer
         </motion.p>
         <motion.p
           style={{ fontSize: '1.2rem', marginBottom: '30px', color: '#ccc', lineHeight: '1.6' }}
@@ -98,8 +98,8 @@ INTERESTS
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          Exploring the digital cosmos, one line of code at a time. 
-          Passionate about creating innovative solutions and pushing the boundaries of technology.
+          I build modern web and mobile applications that are fast, reliable, and user-friendly.  
+          Let's create something amazing together!
         </motion.p>
         <motion.button
           className="download-btn"
