@@ -133,25 +133,15 @@ body {
   box-shadow: none;
   position: relative;
   overflow: hidden;
-  animation: none;
   opacity: 0;
-  transform: scale(0.98) translateY(30px);
-  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(60px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
 }
 
 .content-section.visible {
   opacity: 1;
-  transform: scale(1) translateY(0);
-}
-
-/* Optional: subtle cosmic effect */
-@keyframes cosmic-fade-in {
-  0% { opacity: 0; filter: blur(8px); }
-  100% { opacity: 1; filter: blur(0); }
-}
-
-.content-section.visible {
-  animation: cosmic-fade-in 1.2s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(0);
+  animation: none;
 }
 
 @keyframes float {
