@@ -176,6 +176,26 @@ function App() {
               >
                 {muted ? <VolumeX size={28} /> : <Volume2 size={28} />}
               </button>
+              {/* Music start message */}
+              {!musicStarted && (
+                <div style={{
+                  position: 'fixed',
+                  bottom: 18,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(20,20,30,0.85)',
+                  color: '#fff',
+                  padding: '10px 22px',
+                  borderRadius: 16,
+                  fontSize: '1rem',
+                  zIndex: 2100,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                  pointerEvents: 'none',
+                  opacity: 0.92
+                }}>
+                  If you don’t hear music, click anywhere to start it.
+                </div>
+              )}
               <Navigation />
               <div className="canvas-container">
                 <Canvas
