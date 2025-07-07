@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Linkedin, Github, Twitter, Send } from 'lucide-react';
+import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,64 +24,64 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Here you would typically send the form data to your backend
-    console.log('Form submitted:', formData);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-    
-    setIsSubmitting(false);
-    alert('Thank you for your message! I\'ll get back to you soon.');
+
+    // EmailJS integration
+    emailjs.send(
+      'service_vx2pytq',
+      'template_vcfsfgx',
+      {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      },
+      'lyPEVNR9TmrQtHQ1U'
+    ).then(
+      (result) => {
+        alert('Thank you for your message! I\'ll get back to you soon.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setIsSubmitting(false);
+      },
+      (error) => {
+        alert('Failed to send message. Please try again later.');
+        setIsSubmitting(false);
+      }
+    );
   };
 
   const contactInfo = [
     {
       icon: <Mail size={24} />,
       label: 'Email',
-      value: 'your.email@example.com',
-      link: 'mailto:your.email@example.com'
+      value: 'dasunshanaka01@outlook.com',
+      link: 'mailto:dasunshanaka01@outlook.com'
     },
     {
       icon: <Phone size={24} />,
       label: 'Phone',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567'
+      value: '+94 781123032',
+      link: 'tel:+94781123032'
     },
     {
       icon: <MapPin size={24} />,
       label: 'Location',
-      value: 'Your City, Country',
+      value: 'Colombo, Sri Lanka',
       link: null
     }
   ];
 
   const socialLinks = [
     {
-      icon: <Linkedin size={24} />,
-      label: 'LinkedIn',
-      url: 'https://linkedin.com/in/yourprofile',
-      color: '#0077b5'
-    },
-    {
       icon: <Github size={24} />,
       label: 'GitHub',
-      url: 'https://github.com/yourusername',
+      url: 'https://github.com/DasunShanaka01',
       color: '#333'
     },
     {
-      icon: <Twitter size={24} />,
-      label: 'Twitter',
-      url: 'https://twitter.com/yourusername',
-      color: '#1da1f2'
+      icon: <Linkedin size={24} />,
+      label: 'LinkedIn',
+      url: 'https://linkedin.com/in/dasun-shanaka-756559250',
+      color: '#0077b5'
     }
   ];
 
@@ -131,9 +132,7 @@ const Contact = () => {
                   alignItems: 'center',
                   marginBottom: '20px',
                   padding: '15px',
-                  background: 'rgba(255, 255, 255, 0.05)',
                   borderRadius: '10px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)'
                 }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -185,7 +184,6 @@ const Contact = () => {
                     justifyContent: 'center',
                     width: '50px',
                     height: '50px',
-                    background: 'rgba(255, 255, 255, 0.05)',
                     borderRadius: '50%',
                     color: '#ccc',
                     textDecoration: 'none',

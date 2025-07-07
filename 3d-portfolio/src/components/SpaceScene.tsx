@@ -1,5 +1,5 @@
 import React, { useRef, useState, Suspense } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // Loading component for Suspense fallback
@@ -10,40 +10,43 @@ const LoadingFallback = () => (
   </mesh>
 );
 
-const Meteor = ({ color = "#ffffff", speed = 0.1, size = 1 }: { color?: string; speed?: number; size?: number }) => {
+const Meteor = ({ color = "#ffffff", speed = 0.1, size = 1, startPosition, direction }: { color?: string; speed?: number; size?: number; startPosition?: [number, number, number]; direction?: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
-  const [startPosition] = useState<[number, number, number]>(() => [
-    (Math.random() - 0.5) * 80,
-    (Math.random() - 0.5) * 80,
-    -60 - Math.random() * 30
-  ]);
+  const [initPosition] = useState<[number, number, number]>(() =>
+    startPosition ? startPosition : [
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 80,
+      -60 - Math.random() * 30
+    ]
+  );
   const [meteorColor] = useState(() => color);
   const [meteorSpeed] = useState(() => speed);
   const [meteorSize] = useState(() => size);
+  const [moveDir] = useState<[number, number, number]>(() =>
+    direction ? direction : [0.8, -0.4, 1.2]
+  );
 
-  useFrame((state) => {
+  useFrame(() => {
     if (groupRef.current) {
-      // Move meteor diagonally across the screen with varying speeds
-      groupRef.current.position.x += meteorSpeed * 0.8;
-      groupRef.current.position.y -= meteorSpeed * 0.4;
-      groupRef.current.position.z += meteorSpeed * 1.2;
-      
-      // Add some rotation for more dynamic effect
+      // Move meteor in the given direction
+      groupRef.current.position.x += meteorSpeed * moveDir[0] * 0.01;
+      groupRef.current.position.y += meteorSpeed * moveDir[1] * 0.01;
+      groupRef.current.position.z += meteorSpeed * moveDir[2] * 0.01;
       groupRef.current.rotation.z += 0.02;
-      
-      // Reset meteor when it goes off screen
-      if (groupRef.current.position.z > 30) {
-        groupRef.current.position.set(
-          (Math.random() - 0.5) * 80,
-          (Math.random() - 0.5) * 80,
-          -60 - Math.random() * 30
-        );
+      // Reset meteor if it goes too far
+      const r = Math.sqrt(
+        groupRef.current.position.x ** 2 +
+        groupRef.current.position.y ** 2 +
+        groupRef.current.position.z ** 2
+      );
+      if (r > 120) {
+        groupRef.current.position.set(...initPosition);
       }
     }
   });
 
   return (
-    <group ref={groupRef} position={startPosition} scale={[meteorSize, meteorSize, meteorSize]}>
+    <group ref={groupRef} position={initPosition} scale={[meteorSize, meteorSize, meteorSize]}>
       {/* Meteor body */}
       <mesh>
         <cylinderGeometry args={[0.02, 0.02, 0.8, 6]} />
@@ -109,7 +112,7 @@ const Meteor = ({ color = "#ffffff", speed = 0.1, size = 1 }: { color?: string; 
   );
 };
 
-const RealisticRocket = ({ position }: { position: [number, number, number] }) => {
+const RealisticRocket = ({ position, scale = [1, 1, 1] }: { position: [number, number, number]; scale?: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -122,7 +125,7 @@ const RealisticRocket = ({ position }: { position: [number, number, number] }) =
   });
 
   return (
-    <group ref={groupRef} position={position}>
+    <group ref={groupRef} position={position} scale={scale}>
       {/* Main rocket body */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[0.3, 0.4, 2, 8]} />
@@ -168,7 +171,7 @@ const RealisticRocket = ({ position }: { position: [number, number, number] }) =
   );
 };
 
-const RealisticAstronaut = ({ position }: { position: [number, number, number] }) => {
+const RealisticAstronaut = ({ position, scale = [1, 1, 1] }: { position: [number, number, number]; scale?: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -181,7 +184,7 @@ const RealisticAstronaut = ({ position }: { position: [number, number, number] }
   });
 
   return (
-    <group ref={groupRef} position={position}>
+    <group ref={groupRef} position={position} scale={scale}>
       {/* Helmet */}
       <mesh position={[0, 0.6, 0]}>
         <sphereGeometry args={[0.25, 12, 12]} />
@@ -962,6 +965,35 @@ const ParticleSystem3D = () => {
   );
 };
 
+const SpaceBackground360 = () => {
+  const texture = useLoader(THREE.TextureLoader, '/space360.jpg');
+  return (
+    <mesh scale={[-200, 200, 200]}>
+      <sphereGeometry args={[100, 64, 64]} />
+      <meshBasicMaterial map={texture} side={THREE.BackSide} />
+    </mesh>
+  );
+};
+
+// 360-degree starfield
+const Starfield360 = ({ count = 2000, radius = 95 }) => {
+  const stars = Array.from({ length: count }).map((_, i) => {
+    // Spherical coordinates
+    const theta = Math.acos(2 * Math.random() - 1); // polar angle
+    const phi = 2 * Math.PI * Math.random(); // azimuthal angle
+    const x = radius * Math.sin(theta) * Math.cos(phi);
+    const y = radius * Math.sin(theta) * Math.sin(phi);
+    const z = radius * Math.cos(theta);
+    return (
+      <mesh key={i} position={[x, y, z]}>
+        <sphereGeometry args={[0.18 + Math.random() * 0.12, 6, 6]} />
+        <meshBasicMaterial color="#fff" />
+      </mesh>
+    );
+  });
+  return <>{stars}</>;
+};
+
 const SpaceScene = () => {
   const sceneRef = useRef<THREE.Group>(null);
   const targetRotationY = useRef(0);
@@ -972,40 +1004,47 @@ const SpaceScene = () => {
   useFrame((state) => {
     if (sceneRef.current) {
       timeRef.current += state.clock.getDelta();
-      
-      // 3D auto-rotation with multiple axes and varying speeds
-      const baseSpeed = 0.0004;
+      // Slow down the rotation
+      const baseSpeed = 0.00015; // was 0.0004
       const time = timeRef.current;
-      
-      // Y-axis rotation (primary)
       targetRotationY.current += baseSpeed * state.clock.getDelta() * 60;
-      
-      // X-axis rotation (subtle tilt)
       targetRotationX.current += baseSpeed * 0.15 * state.clock.getDelta() * 60;
-      
-      // Z-axis rotation (very subtle roll)
       targetRotationZ.current += baseSpeed * 0.08 * state.clock.getDelta() * 60;
-      
-      // Add some wave-like variation to make it more organic
       const waveInfluence = Math.sin(time * 0.5) * 0.0001;
       targetRotationY.current += waveInfluence * state.clock.getDelta() * 60;
-      
-      // Smooth interpolation for ultra-smooth 3D rotation
-      const lerpFactor = 0.08; // Slightly faster for more responsive 3D movement
+      const lerpFactor = 0.08;
       sceneRef.current.rotation.y += (targetRotationY.current - sceneRef.current.rotation.y) * lerpFactor;
       sceneRef.current.rotation.x += (targetRotationX.current - sceneRef.current.rotation.x) * lerpFactor;
       sceneRef.current.rotation.z += (targetRotationZ.current - sceneRef.current.rotation.z) * lerpFactor;
-      
-      // Add subtle position movement for more 3D depth
       const positionWave = Math.sin(time * 0.3) * 0.02;
       sceneRef.current.position.y = positionWave;
       sceneRef.current.position.x = Math.cos(time * 0.2) * 0.01;
     }
   });
 
+  // 360-degree meteor shower
+  const Meteor360 = ({ count = 18, speed = 0.12, size = 1.2 }) => {
+    const meteors = Array.from({ length: count }).map((_, i) => {
+      // Spherical coordinates for random direction
+      const theta = Math.acos(2 * Math.random() - 1);
+      const phi = 2 * Math.PI * Math.random();
+      const r = 80 + Math.random() * 10;
+      const x = r * Math.sin(theta) * Math.cos(phi);
+      const y = r * Math.sin(theta) * Math.sin(phi);
+      const z = r * Math.cos(theta);
+      // Each meteor will move radially outward
+      return <Meteor key={i} color="#fff" speed={speed} size={size} startPosition={[x, y, z]} direction={[x, y, z]} />;
+    });
+    return <>{meteors}</>;
+  };
+
   return (
     <group ref={sceneRef}>
       <Suspense fallback={<LoadingFallback />}>
+        {/* 360° Space Background */}
+        <SpaceBackground360 />
+        {/* 360° Starfield */}
+        <Starfield360 count={1000} radius={95} />
         {/* Enhanced Lighting - Brighter for visibility */}
         <ambientLight intensity={0.3} />
         <pointLight position={[5, 5, 5]} intensity={1.5} color="#ffffff" />
@@ -1194,10 +1233,10 @@ const SpaceScene = () => {
       ))}
 
       {/* Realistic Rocket - Right Corner */}
-      <RealisticRocket position={[12, 3, -15]} />
+      <RealisticRocket position={[12, 3, -15]} scale={[2,2,2]} />
 
       {/* Realistic Astronaut - Left Corner */}
-      <RealisticAstronaut position={[-12, -2, -12]} />
+      <RealisticAstronaut position={[-12, -2, -12]} scale={[2,2,2]} />
 
       {/* Floating 3D Elements for enhanced depth */}
       {Array.from({ length: 8 }).map((_, i) => (

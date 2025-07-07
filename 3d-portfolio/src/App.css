@@ -121,20 +121,37 @@ body {
   width: 90%;
   max-width: 1200px;
   margin: 100px auto;
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 25px;
+  /* Remove glassmorphism styles */
+  background: none;
+  border-radius: 0;
   padding: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   color: white;
   min-height: 80vh;
   scrollbar-width: thin;
   scrollbar-color: #667eea #1a1a2e;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: none;
   position: relative;
   overflow: hidden;
-  animation: float 8s ease-in-out infinite;
+  animation: none;
+  opacity: 0;
+  transform: scale(0.98) translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.content-section.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Optional: subtle cosmic effect */
+@keyframes cosmic-fade-in {
+  0% { opacity: 0; filter: blur(8px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
+.content-section.visible {
+  animation: cosmic-fade-in 1.2s cubic-bezier(0.4,0,0.2,1);
 }
 
 @keyframes float {
@@ -147,21 +164,7 @@ body {
 }
 
 .content-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.1) 0%,
-    rgba(118, 75, 162, 0.05) 50%,
-    transparent 100%
-  );
-  border-radius: 25px;
-  pointer-events: none;
-  z-index: -1;
+  content: none;
 }
 
 .content-section::-webkit-scrollbar {
@@ -550,4 +553,29 @@ body {
   .projects-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.github-link .github-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.github-link:hover .github-icon {
+  transform: scale(1.3) rotate(-10deg);
+}
+
+.floating-nav {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 1.5px 6px rgba(102,126,234,0.08);
+  border-radius: 32px;
+  background: rgba(20, 20, 30, 0.95);
+  transition: box-shadow 0.3s, background 0.3s, transform 0.3s;
+  animation: floating-nav-float 6s ease-in-out infinite;
+}
+
+@keyframes floating-nav-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
 }

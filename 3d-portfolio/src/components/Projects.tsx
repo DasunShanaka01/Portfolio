@@ -3,103 +3,64 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Github, Code, Users, Database, Cloud } from 'lucide-react';
 
 const Projects = () => {
-  const projectsData = [
+  // Updated projects with images and professional formatting
+  const projects = [
     {
-      title: 'E-Commerce Platform',
-      description: 'A full-stack e-commerce platform with real-time inventory management, payment processing, and admin dashboard. Features include user authentication, product catalog, shopping cart, order management, and analytics.',
-      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Socket.io', 'AWS'],
-      category: 'Full-Stack',
-      github: 'https://github.com/yourusername/ecommerce-platform',
-      live: 'https://ecommerce-platform.vercel.app',
-      image: '🛒',
-      features: [
-        'User authentication and authorization',
-        'Real-time inventory updates',
-        'Payment processing with Stripe',
-        'Admin dashboard with analytics',
-        'Responsive design for all devices'
-      ]
+      title: 'Online Repair Service Platform (Web App)',
+      category: 'Full stack web app',
+      github: 'https://github.com/DasunShanaka01/FixItNow',
+      tools: ['React', 'Express.js', 'Node.js', 'MongoDB'],
+      description: 'Developed a marketplace connecting customers and repair service providers. Implemented the Service Provider Management system, ensuring verification and reliable service.',
+      image: '/images/fixitnow.png', // Add your image in public/images/
     },
     {
-      title: 'AI-Powered Chat Application',
-      description: 'A modern chat application with AI-powered features including smart replies, sentiment analysis, and automated responses. Built with real-time messaging capabilities and advanced NLP integration.',
-      technologies: ['React', 'Python', 'FastAPI', 'PostgreSQL', 'OpenAI API', 'WebSocket'],
-      category: 'AI/ML',
-      github: 'https://github.com/yourusername/ai-chat-app',
-      live: 'https://ai-chat-app.vercel.app',
-      image: '🤖',
-      features: [
-        'Real-time messaging with WebSocket',
-        'AI-powered smart replies',
-        'Sentiment analysis',
-        'Automated response system',
-        'Message encryption'
-      ]
+      title: 'Job Portal Website (Web App)',
+      category: 'Full stack web app',
+      github: 'https://github.com/DasunShanaka01/Online-job-portal-website',
+      tools: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+      description: 'Designed and deployed a full-stack application to streamline job search and recruitment.',
+      image: '/images/jobportal.png',
     },
     {
-      title: 'Task Management System',
-      description: 'A comprehensive project management tool with task tracking, team collaboration, and progress monitoring. Includes features like Kanban boards, time tracking, and reporting.',
-      technologies: ['Vue.js', 'Express.js', 'MySQL', 'Redis', 'Docker', 'JWT'],
-      category: 'Web Application',
-      github: 'https://github.com/yourusername/task-manager',
-      live: 'https://task-manager.vercel.app',
-      image: '📋',
-      features: [
-        'Kanban board interface',
-        'Team collaboration tools',
-        'Time tracking and reporting',
-        'File sharing and comments',
-        'Mobile responsive design'
-      ]
+      title: 'Online Food Delivery Platform (Web App)',
+      category: 'Full stack web app',
+      github: 'https://github.com/DasunShanaka01/DishDash',
+      tools: ['React', 'Spring Boot', 'MongoDB', 'Tailwind CSS'],
+      description: 'Streamlines the process of connecting customers interfaces for browsing menus, placing orders, and real-time tracking, managing restaurants and delivery personnel.',
+      image: '/images/fooddash.png',
     },
     {
-      title: 'Weather Dashboard',
-      description: 'A beautiful weather application with real-time data, 7-day forecasts, and interactive maps. Features location-based weather updates and customizable widgets.',
-      technologies: ['React', 'TypeScript', 'OpenWeather API', 'Chart.js', 'PWA'],
-      category: 'Frontend',
-      github: 'https://github.com/yourusername/weather-dashboard',
-      live: 'https://weather-dashboard.vercel.app',
-      image: '🌤️',
-      features: [
-        'Real-time weather data',
-        '7-day forecast',
-        'Interactive weather maps',
-        'Location-based updates',
-        'Progressive Web App'
-      ]
+      title: 'Event Management Web App (Web App)',
+      category: 'Full stack web app',
+      github: '',
+      tools: ['Java', 'SQL', 'Eclipse', 'HTML', 'CSS'],
+      description: 'Developed a comprehensive platform to streamline event planning and management processes. Implemented features like user authentication, event creation, and booking management.',
+      image: '/images/eventapp.png',
     },
     {
-      title: 'Microservices Architecture',
-      description: 'A scalable microservices architecture with API gateway, service discovery, and load balancing. Demonstrates best practices for building distributed systems.',
-      technologies: ['Node.js', 'Docker', 'Kubernetes', 'Redis', 'MongoDB', 'Nginx'],
-      category: 'Backend',
-      github: 'https://github.com/yourusername/microservices-demo',
-      live: 'https://microservices-demo.vercel.app',
-      image: '🏗️',
-      features: [
-        'Service discovery and load balancing',
-        'API gateway with rate limiting',
-        'Distributed logging and monitoring',
-        'Container orchestration',
-        'Auto-scaling capabilities'
-      ]
+      title: 'Android Calculator',
+      category: 'Mobile App',
+      github: 'https://github.com/DasunShanaka01/Kotlin-Calculator-App',
+      tools: ['Kotlin', 'Android xml', 'Android Studio'],
+      description: 'The app supports basic arithmetic operations with an intuitive user interface for quick and efficient calculations.',
+      image: '/images/calculator.png',
     },
     {
-      title: 'Portfolio Website (This One!)',
-      description: 'A 3D interactive portfolio website built with React, Three.js, and modern web technologies. Features space-themed animations and responsive design.',
-      technologies: ['React', 'Three.js', 'TypeScript', 'Framer Motion', 'Three.js Fiber'],
-      category: 'Frontend',
-      github: 'https://github.com/yourusername/3d-portfolio',
-      live: 'https://your-portfolio.vercel.app',
-      image: '🚀',
-      features: [
-        '3D space-themed animations',
-        'Interactive 3D elements',
-        'Responsive design',
-        'Smooth page transitions',
-        'Modern UI/UX design'
-      ]
-    }
+      title: 'Personal Finance Tracker',
+      category: 'Mobile App',
+      github: 'https://github.com/DasunShanaka01/Smart-Spender-',
+      tools: ['Kotlin', 'Android xml', 'Android Studio'],
+      description: 'A finance tracking app to manage income, expenses, and savings. I designed an intuitive and visually appealing interface to provide users with a seamless experience.',
+      image: '/images/financetracker.png',
+    },
+    {
+      title: 'Computer Shop App (UI – focused mobile app)',
+      category: 'Mobile App',
+      github: 'https://github.com/DasunShanaka01/CyberCell',
+      tools: ['Kotlin', 'Android xml', 'Android Studio'],
+      description: 'A modern, UI-focused mobile application designed to showcase and browse computer products. Built with an emphasis on clean design and user-friendly navigation, the app allows users to explore product categories, view detailed specs, and experience a smooth shopping interface optimized for mobile devices.',
+      image: '/images/computershop.png',
+    },
   ];
 
   const getCategoryIcon = (category: string) => {
@@ -142,102 +103,34 @@ const Projects = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        {projectsData.map((project, index) => (
+        {projects.map((project, idx) => (
           <motion.div
-            key={index}
+            key={idx}
             className="project-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+            transition={{ duration: 0.6, delay: 0.6 + idx * 0.1 }}
             whileHover={{ scale: 1.02 }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ fontSize: '2rem', marginRight: '10px' }}>{project.image}</span>
-                <h2 className="project-title">{project.title}</h2>
+            <img src={project.image} alt={project.title} className="project-image" style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '10px' }} />
+            <div className="project-content" style={{ padding: '16px' }}>
+              <h3 style={{ marginBottom: '8px' }}>{project.title}</h3>
+              <span style={{ color: '#667eea', fontWeight: 'bold', fontSize: '0.95rem' }}>{project.category}</span>
+              <p style={{ margin: '12px 0', color: '#ccc' }}>{project.description}</p>
+              <div style={{ marginBottom: '8px' }}>
+                <strong>Tools & Technologies:</strong> {project.tools.join(', ')}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', color: '#667eea' }}>
-                {getCategoryIcon(project.category)}
-                <span style={{ marginLeft: '5px', fontSize: '0.8rem' }}>{project.category}</span>
-              </div>
-            </div>
-            
-            <p className="project-description">
-              {project.description}
-            </p>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <h3 style={{ color: '#667eea', fontSize: '1rem', marginBottom: '8px' }}>
-                Key Features
-              </h3>
-              <ul style={{ color: '#ccc', fontSize: '0.9rem', lineHeight: '1.5', paddingLeft: '20px' }}>
-                {project.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} style={{ marginBottom: '3px' }}>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="project-tech">
-              {project.technologies.map((tech, techIndex) => (
-                <span key={techIndex} className="tech-tag">
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '8px 15px',
-                  background: 'rgba(102, 126, 234, 0.2)',
-                  color: '#667eea',
-                  textDecoration: 'none',
-                  borderRadius: '20px',
-                  fontSize: '0.9rem',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(102, 126, 234, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(102, 126, 234, 0.2)';
-                }}
-              >
-                <Github size={16} style={{ marginRight: '5px' }} />
-                Code
-              </a>
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '8px 15px',
-                  background: 'linear-gradient(45deg, #667eea, #764ba2)',
-                  color: 'white',
-                  textDecoration: 'none',
-                  borderRadius: '20px',
-                  fontSize: '0.9rem',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <ExternalLink size={16} style={{ marginRight: '5px' }} />
-                Live Demo
-              </a>
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#667eea', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+                  className="github-link"
+                >
+                  <Github size={28} className="github-icon" />
+                </a>
+              )}
             </div>
           </motion.div>
         ))}

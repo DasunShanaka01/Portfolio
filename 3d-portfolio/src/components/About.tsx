@@ -157,10 +157,8 @@ const About = () => {
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
           <div style={{ 
-            background: 'rgba(255, 255, 255, 0.05)', 
             padding: '20px', 
             borderRadius: '15px', 
-            border: '1px solid rgba(255, 255, 255, 0.1)' 
           }}>
             <h3 style={{ color: '#667eea', marginBottom: '10px' }}>Frontend Development</h3>
             <p style={{ color: '#ccc', fontSize: '0.9rem' }}>
@@ -169,10 +167,8 @@ const About = () => {
             </p>
           </div>
           <div style={{ 
-            background: 'rgba(255, 255, 255, 0.05)', 
             padding: '20px', 
             borderRadius: '15px', 
-            border: '1px solid rgba(255, 255, 255, 0.1)' 
           }}>
             <h3 style={{ color: '#667eea', marginBottom: '10px' }}>Backend Development</h3>
             <p style={{ color: '#ccc', fontSize: '0.9rem' }}>
@@ -181,10 +177,8 @@ const About = () => {
             </p>
           </div>
           <div style={{ 
-            background: 'rgba(255, 255, 255, 0.05)', 
             padding: '20px', 
             borderRadius: '15px', 
-            border: '1px solid rgba(255, 255, 255, 0.1)' 
           }}>
             <h3 style={{ color: '#667eea', marginBottom: '10px' }}>Mobile Application Development</h3>
             <p style={{ color: '#ccc', fontSize: '0.9rem' }}>

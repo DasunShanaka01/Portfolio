@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -12,6 +12,7 @@ import Education from './components/Education';
 import Certificates from './components/Certificates';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import { Volume2, VolumeX } from 'lucide-react';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -69,7 +70,42 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Section wrapper for intersection observer
+function Section({ children, id }: { children: React.ReactNode, id: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new window.IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.2 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => { if (ref.current) observer.unobserve(ref.current); };
+  }, []);
+
+  return (
+    <div ref={ref} id={id} className={`content-section${visible ? ' visible' : ''}`}>
+      {children}
+    </div>
+  );
+}
+
 function App() {
+  const [muted, setMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 1;
+      audioRef.current.muted = muted;
+    }
+  }, [muted]);
+
+  const handleToggleMute = () => {
+    setMuted((prev) => !prev);
+  };
+
   return (
     <ErrorBoundary>
       <Router>
@@ -78,6 +114,34 @@ function App() {
           {/* Main Portfolio Route */}
           <Route path="/*" element={
             <div className="App">
+              {/* Background Music */}
+              <audio ref={audioRef} src="/space-music.mp3" autoPlay loop />
+              {/* Mute/Unmute Button */}
+              <button
+                className="music-toggle-btn"
+                onClick={handleToggleMute}
+                style={{
+                  position: 'fixed',
+                  top: 24,
+                  right: 32,
+                  zIndex: 2000,
+                  background: 'rgba(20,20,30,0.85)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 48,
+                  height: 48,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  transition: 'background 0.2s',
+                }}
+                aria-label={muted ? 'Unmute music' : 'Mute music'}
+              >
+                {muted ? <VolumeX size={28} /> : <Volume2 size={28} />}
+              </button>
               <Navigation />
               <div className="canvas-container">
                 <Canvas
@@ -107,13 +171,13 @@ function App() {
               </div>
               <div className="content-overlay">
                 <div className="scrollable-content">
-                  <Home />
-                  <About />
-                  <Skills />
-                  <Education />
-                  <Certificates />
-                  <Projects />
-                  <Contact />
+                  <Section id="home"><Home /></Section>
+                  <Section id="about"><About /></Section>
+                  <Section id="skills"><Skills /></Section>
+                  <Section id="education"><Education /></Section>
+                  <Section id="certificates"><Certificates /></Section>
+                  <Section id="projects"><Projects /></Section>
+                  <Section id="contact"><Contact /></Section>
                 </div>
               </div>
             </div>

@@ -36,7 +36,7 @@ const Navigation = () => {
   }, []);
 
   return (
-    <nav className="navigation">
+    <nav className="navigation floating-nav">
       <button 
         className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
         onClick={() => scrollToSection('home')}
@@ -86,10 +86,6 @@ const Navigation = () => {
         <Mail size={20} />
         <span>Contact</span>
       </button>
-      <Link to="/admin" className="nav-link admin-link">
-        <Settings size={20} />
-        <span>Admin</span>
-      </Link>
     </nav>
   );
 };
