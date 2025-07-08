@@ -95,6 +95,7 @@ function App() {
   const [muted, setMuted] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
+  const [showRocket, setShowRocket] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -111,9 +112,13 @@ function App() {
           await audioRef.current.play();
           setMusicStarted(true);
           setShowOverlay(false);
+          // Start rocket animation
+          setShowRocket(true);
+          // Hide rocket after animation completes (3 seconds)
+          setTimeout(() => setShowRocket(false), 3000);
         } catch (error) {
           console.error('Autoplay blocked:', error);
-          setShowOverlay(true); // Show overlay if autoplay fails
+          setShowOverlay(true);
         }
       }
     };
@@ -149,6 +154,10 @@ function App() {
       audioRef.current.play().then(() => {
         setMusicStarted(true);
         setShowOverlay(false);
+        // Start rocket animation
+        setShowRocket(true);
+        // Hide rocket after animation completes (3 seconds)
+        setTimeout(() => setShowRocket(false), 3000);
       }).catch((error) => {
         console.error('Error playing audio:', error);
       });
@@ -178,21 +187,40 @@ function App() {
                   color: 'white',
                   textAlign: 'center'
                 }}>
-                  <h2>Click to Start Background Music</h2>
-                  <button
+                  <h2>Click Rocket to Launch Portfolio</h2>
+                  <svg
                     onClick={handleOverlayStart}
+                    width="100"
+                    height="100"
+                    viewBox="0 0 100 100"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                     style={{
-                      padding: '10px 20px',
-                      background: '#667eea',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '5px',
                       cursor: 'pointer',
-                      marginTop: '20px'
+                      marginTop: '20px',
+                      transition: 'transform 0.3s',
                     }}
+                    className="rocket-button"
                   >
-                    Start Music
-                  </button>
+                    <path d="M50 10 L30 90 H40 L45 70 H55 L60 90 H70 L50 10 Z" fill="#667eea"/>
+                    <path d="M50 80 C45 85, 55 85, 50 80" fill="#ff4500"/>
+                  </svg>
+                </div>
+              )}
+              {/* Rocket Animation */}
+              {showRocket && (
+                <div style={{
+                  position: 'fixed',
+                  bottom: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  zIndex: 2500,
+                  animation: 'rocketLaunch 3s ease-out forwards',
+                }}>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10 L30 90 H40 L45 70 H55 L60 90 H70 L50 10 Z" fill="#667eea"/>
+                    <path d="M50 80 C45 85, 55 85, 50 80" fill="#ff4500"/>
+                  </svg>
                 </div>
               )}
               {/* Background Music */}
