@@ -94,6 +94,7 @@ function Section({ children, id }: { children: React.ReactNode, id: string }) {
 function App() {
   const [muted, setMuted] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -103,7 +104,6 @@ function App() {
     }
   }, [muted]);
 
-  // Try to autoplay on mount, and if blocked, start on first user interaction
   useEffect(() => {
     const tryPlay = () => {
       if (audioRef.current && !musicStarted) {
@@ -111,8 +111,10 @@ function App() {
         if (playPromise !== undefined) {
           playPromise.then(() => {
             setMusicStarted(true);
+            setShowOverlay(false);
           }).catch(() => {
-            // Autoplay blocked, wait for user interaction
+            // Autoplay blocked, show overlay for manual start
+            setShowOverlay(true);
           });
         }
       }
@@ -121,7 +123,6 @@ function App() {
     if (!musicStarted) {
       const startOnUserAction = () => {
         tryPlay();
-        setMusicStarted(true);
         window.removeEventListener('click', startOnUserAction);
         window.removeEventListener('keydown', startOnUserAction);
         window.removeEventListener('touchstart', startOnUserAction);
@@ -141,6 +142,14 @@ function App() {
     setMuted((prev) => !prev);
   };
 
+  const handleOverlayStart = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+    setMusicStarted(true);
+    setShowOverlay(false);
+  };
+
   return (
     <ErrorBoundary>
       <Router>
@@ -148,6 +157,46 @@ function App() {
           {/* Main Portfolio Route */}
           <Route path="/*" element={
             <div className="App">
+              {/* Music Start Overlay */}
+              {showOverlay && !musicStarted && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    background: 'rgba(20,20,30,0.96)',
+                    color: '#fff',
+                    zIndex: 3000,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <h2 style={{ marginBottom: 24 }}>Welcome!</h2>
+                  <button
+                    onClick={handleOverlayStart}
+                    style={{
+                      fontSize: 22,
+                      padding: '1em 2.5em',
+                      borderRadius: 12,
+                      border: 'none',
+                      background: '#667eea',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Click to Start Music
+                  </button>
+                  <p style={{ marginTop: 18, fontSize: 16, opacity: 0.8 }}>
+                    Music enhances your experience. You can mute/unmute anytime.
+                  </p>
+                </div>
+              )}
               {/* Background Music */}
               <audio ref={audioRef} src="/space-music.mp3" autoPlay loop />
               {/* Mute/Unmute Button */}
@@ -176,26 +225,7 @@ function App() {
               >
                 {muted ? <VolumeX size={28} /> : <Volume2 size={28} />}
               </button>
-              {/* Music start message */}
-              {!musicStarted && (
-                <div style={{
-                  position: 'fixed',
-                  bottom: 18,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: 'rgba(20,20,30,0.85)',
-                  color: '#fff',
-                  padding: '10px 22px',
-                  borderRadius: 16,
-                  fontSize: '1rem',
-                  zIndex: 2100,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
-                  pointerEvents: 'none',
-                  opacity: 0.92
-                }}>
-                  If you don’t hear music, click anywhere to start it.
-                </div>
-              )}
+              {/* Music start message removed, replaced by overlay */}
               <Navigation />
               <div className="canvas-container">
                 <Canvas
