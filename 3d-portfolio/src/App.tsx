@@ -94,7 +94,7 @@ function Section({ children, id }: { children: React.ReactNode, id: string }) {
 function App() {
   const [muted, setMuted] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -105,21 +105,21 @@ function App() {
   }, [muted]);
 
   useEffect(() => {
-    const tryPlay = () => {
+    const tryPlay = async () => {
       if (audioRef.current && !musicStarted) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            setMusicStarted(true);
-            setShowOverlay(false);
-          }).catch(() => {
-            // Autoplay blocked, show overlay for manual start
-            setShowOverlay(true);
-          });
+        try {
+          await audioRef.current.play();
+          setMusicStarted(true);
+          setShowOverlay(false);
+        } catch (error) {
+          console.error('Autoplay blocked:', error);
+          setShowOverlay(true); // Show overlay if autoplay fails
         }
       }
     };
+
     tryPlay();
+
     if (!musicStarted) {
       const startOnUserAction = () => {
         tryPlay();
@@ -127,9 +127,11 @@ function App() {
         window.removeEventListener('keydown', startOnUserAction);
         window.removeEventListener('touchstart', startOnUserAction);
       };
+
       window.addEventListener('click', startOnUserAction);
       window.addEventListener('keydown', startOnUserAction);
       window.addEventListener('touchstart', startOnUserAction);
+
       return () => {
         window.removeEventListener('click', startOnUserAction);
         window.removeEventListener('keydown', startOnUserAction);
@@ -143,62 +145,58 @@ function App() {
   };
 
   const handleOverlayStart = () => {
-    if (audioRef.current) {
-      audioRef.current.play();
+    if (audioRef.current && !musicStarted) {
+      audioRef.current.play().then(() => {
+        setMusicStarted(true);
+        setShowOverlay(false);
+      }).catch((error) => {
+        console.error('Error playing audio:', error);
+      });
     }
-    setMusicStarted(true);
-    setShowOverlay(false);
   };
 
   return (
     <ErrorBoundary>
       <Router>
         <Routes>
-          {/* Main Portfolio Route */}
           <Route path="/*" element={
             <div className="App">
-              {/* Music Start Overlay */}
+              {/* Overlay for manual audio start */}
               {showOverlay && !musicStarted && (
-                <div
-                  style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    background: 'rgba(20,20,30,0.96)',
-                    color: '#fff',
-                    zIndex: 3000,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <h2 style={{ marginBottom: 24 }}>Welcome!</h2>
+                <div style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(0, 0, 0, 0.8)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 3000,
+                  color: 'white',
+                  textAlign: 'center'
+                }}>
+                  <h2>Click to Start Background Music</h2>
                   <button
                     onClick={handleOverlayStart}
                     style={{
-                      fontSize: 22,
-                      padding: '1em 2.5em',
-                      borderRadius: 12,
-                      border: 'none',
+                      padding: '10px 20px',
                       background: '#667eea',
-                      color: '#fff',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
                       cursor: 'pointer',
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
-                      fontWeight: 600,
+                      marginTop: '20px'
                     }}
                   >
-                    Click to Start Music
+                    Start Music
                   </button>
-                  <p style={{ marginTop: 18, fontSize: 16, opacity: 0.8 }}>
-                    Music enhances your experience. You can mute/unmute anytime.
-                  </p>
                 </div>
               )}
               {/* Background Music */}
-              <audio ref={audioRef} src="/space-music.mp3" autoPlay loop />
+              <audio ref={audioRef} src="/space-music.mp3" loop />
               {/* Mute/Unmute Button */}
               <button
                 className="music-toggle-btn"
@@ -219,13 +217,12 @@ function App() {
                   boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
                   cursor: 'pointer',
                   color: '#fff',
-                  transition: 'background 0.2s',
+                  transition: 'background 0.2s'
                 }}
                 aria-label={muted ? 'Unmute music' : 'Mute music'}
               >
                 {muted ? <VolumeX size={28} /> : <Volume2 size={28} />}
               </button>
-              {/* Music start message removed, replaced by overlay */}
               <Navigation />
               <div className="canvas-container">
                 <Canvas
