@@ -1034,6 +1034,13 @@ const SpaceScene = () => {
   const targetRotationZ = useRef(0);
   const timeRef = useRef(0);
 
+  // Track full 360-degree rotations
+  const [rotationCount, setRotationCount] = useState(0);
+  const lastRotationY = useRef(0);
+  // Control large meteor shower visibility
+  const [showLargeShower, setShowLargeShower] = useState(false);
+  const largeShowerTimeout = useRef<NodeJS.Timeout | null>(null);
+
   useFrame((state) => {
     if (sceneRef.current) {
       timeRef.current += state.clock.getDelta();
@@ -1052,8 +1059,32 @@ const SpaceScene = () => {
       const positionWave = Math.sin(time * 0.3) * 0.02;
       sceneRef.current.position.y = positionWave;
       sceneRef.current.position.x = Math.cos(time * 0.2) * 0.01;
+
+      // --- Rotation tracking logic ---
+      // Detect full 360-degree rotation (2 * Math.PI)
+      const prev = lastRotationY.current;
+      const curr = targetRotationY.current;
+      if (Math.floor(curr / (2 * Math.PI)) > Math.floor(prev / (2 * Math.PI))) {
+        setRotationCount((c) => c + 1);
+      }
+      lastRotationY.current = curr;
     }
   });
+
+  // Show large meteor shower every 360 rotations
+  React.useEffect(() => {
+    if (rotationCount > 0 && rotationCount % 360 === 0) {
+      setShowLargeShower(true);
+      if (largeShowerTimeout.current) clearTimeout(largeShowerTimeout.current);
+      largeShowerTimeout.current = setTimeout(() => {
+        setShowLargeShower(false);
+      }, 4000); // Show for 4 seconds
+    }
+    // Cleanup on unmount
+    return () => {
+      if (largeShowerTimeout.current) clearTimeout(largeShowerTimeout.current);
+    };
+  }, [rotationCount]);
 
   // 360-degree meteor shower
   const Meteor360 = ({ count = 18, speed = 0.12, size = 1.2 }) => {
@@ -1292,6 +1323,9 @@ const SpaceScene = () => {
 
       {/* 3D Particle System */}
       <ParticleSystem3D />
+
+      {/* Large Meteor Shower every 360 rotations */}
+      {showLargeShower && <Meteor360 count={60} speed={0.22} size={3.5} />}
 
       </Suspense>
     </group>
