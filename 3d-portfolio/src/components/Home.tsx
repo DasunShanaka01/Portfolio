@@ -6,8 +6,8 @@ const Home = () => {
   const handleDownloadResume = () => {
     // Download the actual PDF resume from the public folder
     const resumeUrl = process.env.PUBLIC_URL
-      ? `${process.env.PUBLIC_URL}/Dasun Shanaka Resume 1.1.pdf`
-      : '/Dasun Shanaka Resume 1.1.pdf';
+      ? `${process.env.PUBLIC_URL}/Dasun Shanaka Resume.pdf`
+      : '/Dasun Shanaka Resume.pdf';
     const a = document.createElement('a');
     a.href = resumeUrl;
     a.download = 'Dasun_Shanaka_Resume.pdf';
